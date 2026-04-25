@@ -202,7 +202,7 @@ CREATE TRIGGER update_supplier_configs_updated_at
 
 -- Function to generate order numbers
 CREATE OR REPLACE FUNCTION generate_order_number()
-RETURNS TEXT AS $$
+RETURNS TRIGGER AS $$
 DECLARE
   order_num TEXT;
 BEGIN
@@ -214,7 +214,8 @@ BEGIN
     order_num := 'LD-' || TO_CHAR(NOW(), 'YYYYMMDD') || '-' || LPAD((random() * 99999)::int::text, 5, '0');
   END LOOP;
   
-  RETURN order_num;
+  NEW.order_number := order_num;
+  RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 

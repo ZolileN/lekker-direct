@@ -1,21 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --background: #f9fafb; /* gray-50 */
+  --foreground: #111827; /* gray-900 */
+  --card: #ffffff;
+  --card-foreground: #111827;
+  --border: #e5e7eb;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #030712; /* gray-950 */
+    --foreground: #f9fafb; /* gray-50 */
+    --card: #111827; /* gray-900 */
+    --card-foreground: #f9fafb;
+    --border: #374151;
   }
 }
 
@@ -23,4 +22,22 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Ensure placeholders are visible but distinct */
+::placeholder {
+  color: #6b7280; /* text-gray-500 */
+  opacity: 1;
+}
+
+/* Ensure typed text is visible based on the theme */
+input, select, textarea {
+  color: var(--foreground);
+  background-color: var(--card);
+  border-color: var(--border);
+}
+
+::placeholder {
+  color: #9ca3af; /* gray-400 */
+  opacity: 1;
 }
