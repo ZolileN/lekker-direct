@@ -57,7 +57,6 @@ export class SupabaseProductRepository implements IProductRepository {
       return [];
     }
 
-    console.log(`Successfully fetched ${data.length} products from Supabase`);
     return data.map(p => this.mapToProduct(p));
   }
 
@@ -65,7 +64,7 @@ export class SupabaseProductRepository implements IProductRepository {
     let query = this.supabase
       .from('products')
       .select('*')
-      .ilike('category', `%${category}%`); // Using ilike for fuzzy matching
+      .eq('category', category);
     
     if (limit) {
       query = query.limit(limit);

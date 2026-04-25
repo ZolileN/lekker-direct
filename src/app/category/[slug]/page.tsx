@@ -2,13 +2,13 @@ import { CategoryProducts } from '@/components/product/CategoryProducts';
 
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  const { slug } = params;
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { slug } = await params;
   
   // Convert slug to Title Case for the display
   const title = slug
@@ -28,7 +28,8 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 }
 
 export async function generateMetadata({ params }: CategoryPageProps) {
-  const title = params.slug
+  const { slug } = await params;
+  const title = slug
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
