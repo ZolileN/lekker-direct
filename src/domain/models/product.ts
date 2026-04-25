@@ -14,6 +14,9 @@ export interface Product {
 }
 
 export interface IProductRepository {
-  getAll(): Promise<Product[]>;
+  getAll(limit?: number): Promise<Product[]>;
+  getByCategory(category: string, limit?: number): Promise<Product[]>;
   getById(id: string): Promise<Product | null>;
 }
+
+

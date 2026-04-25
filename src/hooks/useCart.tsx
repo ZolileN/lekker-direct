@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { CartService } from '../domain/services/CartService';
 import { CartItem } from '../domain/models/cartItem';
 import { Product } from '../domain/models/product';

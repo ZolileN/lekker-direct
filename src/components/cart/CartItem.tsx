@@ -12,7 +12,7 @@ export function CartItem({ item }: { item: CartItemType }) {
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex items-center space-x-4">
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <Image
             src={item.image}
             alt={item.title}

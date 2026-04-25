@@ -2,9 +2,12 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Lock } from 'lucide-react';
 import { ProductGrid } from '@/components/product/ProductGrid';
-import { featuredProducts } from '@/data/products';
+import { SupabaseProductRepository } from '@/infrastructure/supabase/repository/ProductRepository';
 
-export default function Home() {
+export default async function Home() {
+  const repository = new SupabaseProductRepository();
+  const featuredProducts = await repository.getAll(25);
+
   return (
     <div className="bg-gray-50">
       {/* Hero Section */}
@@ -55,7 +58,7 @@ export default function Home() {
         subtitle="Discover our most popular products" 
       />
       
-      <div className="text-center mt-[-2rem] mb-12">
+      <div className="text-center -mt-8 mb-12">
         <Button variant="outline" size="lg">
           View All Products
         </Button>

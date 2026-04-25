@@ -1,16 +1,16 @@
 export const navLinks = [
   { name: 'Shop', href: '/shop' },
-  { name: 'Electronics', href: '/electronics' },
-  { name: 'Fashion', href: '/fashion' },
-  { name: 'Home', href: '/home' },
+  { name: 'Electronics', href: '/category/electronics' },
+  { name: 'Fashion', href: '/category/fashion' },
+  { name: 'Home', href: '/category/home' },
 ];
 
 export const footerLinks = {
   shop: [
-    { name: 'Electronics', href: '/electronics' },
-    { name: 'Fashion', href: '/fashion' },
-    { name: 'Home', href: '/home' },
-    { name: 'Gadgets', href: '/gadgets' },
+    { name: 'Electronics', href: '/category/electronics' },
+    { name: 'Fashion', href: '/category/fashion' },
+    { name: 'Home', href: '/category/home' },
+    { name: 'Gadgets', href: '/category/gadgets' },
   ],
   support: [
     { name: 'Track Order', href: '/track-order' },
