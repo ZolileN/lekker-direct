@@ -103,7 +103,7 @@ export function ProductDetails({ product }: { product: Product }) {
                 <ul className="space-y-2">
                   {product.features.map((feature, index) => (
                     <li key={index} className="flex items-start">
-                      <svg className="h-5 w-5 text-green-700 dark:text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-5 w-5 text-green-700 dark:text-green-500 mr-2 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="text-gray-600 dark:text-gray-400">{feature}</span>

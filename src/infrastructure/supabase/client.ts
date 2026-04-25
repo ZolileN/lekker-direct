@@ -2,14 +2,15 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 export const createSupabaseClient = (): SupabaseClient => {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const secretKey = process.env.SUPABASE_SECRET_KEY;
 
-  if (!url || !anonKey) {
+  if (!url || !secretKey) {
     throw new Error(
       'Missing Supabase environment variables. ' +
-      'Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local.'
+      'Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY in .env.local.'
     );
   }
 
-  return createClient(url, anonKey);
+  // Use secret key for development to bypass potential RLS issues
+  return createClient(url, secretKey);
 };

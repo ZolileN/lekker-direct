@@ -28,7 +28,8 @@ CREATE TABLE products (
   discount_percentage INTEGER,
   last_sync TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(supplier_id, supplier)
 );
 
 -- Profiles table (extends Supabase auth.users)
@@ -129,9 +130,15 @@ CREATE INDEX idx_cart_items_session_id ON cart_items(session_id);
 
 -- Row Level Security (RLS) policies
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE order_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cart_items ENABLE ROW LEVEL SECURITY;
+
+-- Products RLS policies
+CREATE POLICY "Public can view active products"
+  ON products FOR SELECT
+  USING (is_active = true);
 
 -- Profiles RLS policies
 CREATE POLICY "Users can view own profile"
