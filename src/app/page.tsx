@@ -6,7 +6,9 @@ import { SupabaseProductRepository } from '@/infrastructure/supabase/repository/
 
 export default async function Home() {
   const repository = new SupabaseProductRepository();
-  const featuredProducts = await repository.getAll(25);
+  const featuredProducts = await repository.getAll(8);
+  const electronics = await repository.getByCategory('Electronics', 8);
+  const fashion = await repository.getByCategory('Fashion', 8);
 
   return (
     <div className="bg-gray-50">
@@ -51,10 +53,28 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Electronics Section */}
+      {electronics.length > 0 && (
+        <ProductGrid 
+          products={electronics} 
+          title="Electronics & Tech" 
+          subtitle="Latest gadgets and accessories" 
+        />
+      )}
+
+      {/* Fashion Section */}
+      {fashion.length > 0 && (
+        <ProductGrid 
+          products={fashion} 
+          title="Fashion & Apparel" 
+          subtitle="Trendy clothing and accessories" 
+        />
+      )}
+
       {/* Featured Products Section */}
       <ProductGrid 
         products={featuredProducts} 
-        title="You May Also Like" 
+        title="Featured Products" 
         subtitle="Discover our most popular products" 
       />
       

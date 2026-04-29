@@ -1,11 +1,16 @@
 'use client';
 
-import { Lock } from 'lucide-react';
+import { Lock, Loader2 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useCart } from '../../hooks/useCart';
 import { supportedBanks } from '../../config/navigation';
 
-export function PaymentSection() {
+type PaymentSectionProps = {
+  onPay?: () => void;
+  isLoading?: boolean;
+};
+
+export function PaymentSection({ onPay, isLoading }: PaymentSectionProps) {
   const { total } = useCart();
 
   return (
@@ -45,8 +50,20 @@ export function PaymentSection() {
         </div>
       </div>
 
-      <Button size="lg" className="w-full text-lg py-3" disabled={total === 0}>
-        Pay R{total.toLocaleString()} with Ozow
+      <Button 
+        size="lg" 
+        className="w-full text-lg py-3" 
+        disabled={total === 0 || isLoading}
+        onClick={onPay}
+      >
+        {isLoading ? (
+          <>
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            Processing...
+          </>
+        ) : (
+          `Pay R${total.toLocaleString()} with Ozow`
+        )}
       </Button>
       
       <div className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
