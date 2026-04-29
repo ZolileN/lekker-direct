@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createBrowserClient } from '@supabase/auth-helpers-nextjs';
 import { ShippingForm } from '@/components/checkout/ShippingForm';
 import { OrderSummary } from '@/components/checkout/OrderSummary';
 import { PaymentSection } from '@/components/checkout/PaymentSection';
@@ -18,6 +19,10 @@ export type ShippingData = {
 
 export function CheckoutClient() {
   const { items, total, shipping } = useCart();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+  );
   const [shippingData, setShippingData] = useState<ShippingData>({
     fullName: '',
     email: '',
@@ -30,6 +35,38 @@ export function CheckoutClient() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ozowPayload, setOzowPayload] = useState<Record<string, string> | null>(null);
+
+  // Pre-fill shipping data from user profile if logged in
+  useEffect(() => {
+    const prefillFromProfile = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name, phone_number, shipping_address')
+        .eq('id', session.user.id)
+        .single();
+
+      if (profile) {
+        setShippingData((prev) => ({
+          ...prev,
+          fullName: profile.full_name ?? prev.fullName,
+          email: session.user.email ?? prev.email,
+          phone: profile.phone_number ?? prev.phone,
+          streetAddress: profile.shipping_address?.street ?? prev.streetAddress,
+          city: profile.shipping_address?.city ?? prev.city,
+          province: profile.shipping_address?.province ?? prev.province,
+          postalCode: profile.shipping_address?.postal_code ?? prev.postalCode,
+        }));
+      } else {
+        // At least pre-fill email
+        setShippingData((prev) => ({ ...prev, email: session.user.email ?? prev.email }));
+      }
+    };
+
+    prefillFromProfile();
+  }, [supabase]);
 
   const handleInputChange = (field: keyof ShippingData, value: string) => {
     setShippingData((prev) => ({ ...prev, [field]: value }));
@@ -51,6 +88,10 @@ export function CheckoutClient() {
     setError(null);
 
     try {
+      // Get current user id to link order to account
+      const { data: { session } } = await supabase.auth.getSession();
+      const userId = session?.user.id ?? null;
+
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -59,6 +100,7 @@ export function CheckoutClient() {
           items,
           total,
           shippingCost: shipping,
+          userId,
         }),
       });
 
