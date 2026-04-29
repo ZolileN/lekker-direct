@@ -126,38 +126,40 @@ CREATE TABLE profiles (
    - Payment redirect handling
    - Order confirmation
 
-### Phase 2: User Authentication & Profiles (Next)
-**Status**: Pending
+### Phase 2: User Authentication & Profiles ✅
+**Status**: Completed (branch: `user/authentication`)
 
-#### Implementation Steps:
-1. **Authentication Setup**
-   - Install Supabase Auth helpers
-   - Create auth context/provider
-   - Implement login page
-   - Implement signup page
-   - Implement password reset
-   - Protect authenticated routes
+#### Completed Features:
+1. **Database Migration**
+   - `supabase/migrations/01_auth_trigger.sql` — Postgres function + trigger to auto-create a `profiles` row on every new `auth.users` signup
 
-2. **User Profiles**
-   - Create profiles table
-   - Implement profile management page
-   - Add user avatar upload
-   - Update profile information
-   - Add address management
+2. **Middleware & Auth Routing**
+   - `src/middleware.ts` — Cookie-based route guard; redirects unauthenticated users from `/account/*` to `/login`, and logged-in users away from `/login` and `/signup`
+   - `src/app/auth/callback/route.ts` — Handles Supabase email-link callbacks (email confirmation, password reset)
 
-3. **Account Pages**
-   - Account dashboard
-   - Order history
-   - Address book
-   - Account settings
+3. **Authentication Pages** (under `(auth)` route group with glassmorphism card layout)
+   - `src/app/(auth)/layout.tsx` — Shared auth page layout with decorative background blobs
+   - `src/app/(auth)/login/page.tsx` — Email/password login with show/hide toggle
+   - `src/app/(auth)/signup/page.tsx` — Signup with full name, email confirmation success state
+   - `src/app/(auth)/reset-password/page.tsx` — Request reset link + update password (Suspense-wrapped)
 
-4. **Integration**
-   - Link orders to user accounts
-   - Show personalized recommendations
-   - Save cart to user account
-   - Email notifications
+4. **Account Pages** (server-rendered, protected)
+   - `src/app/account/layout.tsx` — Server-side session check, sidebar + main content grid
+   - `src/app/account/page.tsx` — Dashboard with live order count and profile completeness
+   - `src/app/account/profile/page.tsx` — Edit name, phone, shipping address with upsert
+   - `src/app/account/orders/page.tsx` — Full order history with status badges and item previews
 
-### Phase 3: Order Management System
+5. **Components & Hooks**
+   - `src/components/account/AccountSidebar.tsx` — User avatar/initials, active nav, sign-out
+   - `src/hooks/useAuth.tsx` — Client-side auth state hook (session, user, loading, signOut)
+   - `src/lib/supabase/browser.ts` — Shared `createBrowserClient` factory
+
+6. **Integrations**
+   - `src/components/layout/Header.tsx` — Auth-aware; shows avatar+dropdown for logged-in users, "Sign in" CTA for guests
+   - `src/app/checkout/CheckoutClient.tsx` — Pre-fills shipping form from user profile, passes `user_id` to order creation API
+   - `src/app/api/checkout/route.ts` — Persists `user_id` on the `orders` row
+
+### Phase 3: Order Management System (Next)
 **Status**: Pending
 
 #### Implementation Steps:
@@ -400,7 +402,14 @@ CREATE TABLE profiles (
 
 ## 🔄 Version History
 
-- **v0.1.0** (Current): Core e-commerce functionality
+- **v0.2.0** (Current): User Authentication & Profiles
+  - Login, Signup, Reset Password pages
+  - Account dashboard, profile management, order history
+  - Auth-aware Header with user dropdown
+  - Checkout pre-fill from saved profile
+  - Orders linked to user accounts
+
+- **v0.1.0**: Core e-commerce functionality
   - Product catalog and categories
   - Shopping cart
   - Ozow checkout integration

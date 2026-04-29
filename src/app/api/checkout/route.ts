@@ -12,7 +12,7 @@ type CartItem = {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { shippingData, items, total, shippingCost } = body;
+    const { shippingData, items, total, shippingCost, userId } = body;
 
     if (!shippingData || !items || items.length === 0 || !total) {
       return NextResponse.json(
@@ -34,6 +34,7 @@ export async function POST(request: Request) {
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert({
+        user_id: userId ?? null,
         total_amount: total,
         subtotal: subtotal,
         shipping_cost: shippingCost || 0,
